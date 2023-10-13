@@ -1,5 +1,6 @@
 #include <iostream>
 #include <stdlib.h>
+#include <time.h>
 using namespace std;
 
 class LSE{
@@ -134,64 +135,55 @@ public:
             cout<<eliminaPrimero()<<endl;
         }
     };
+    int cuentaNodos(void){
+        int n=0;
+        Nodo* aux;
+        aux = primero;
+        while(aux != NULL){
+            n = n + 1;
+            aux = aux->siguiente;
+        }
+        return n;
+    };
+    int sumaNodos(void){
+        int s=0;
+        Nodo* aux;
+        aux = primero;
+        while(aux != NULL){
+             s = s + aux->dato;
+            aux = aux->siguiente;
+        }
+        return s;
+    };
+    float promediaNodos(void){
+        float promedio;
+        float s=0;
+        int n=0;
+        Nodo* aux;
+        aux = primero;
+        while(aux != NULL){
+            s = s + aux->dato;
+            n = n+1;
+            aux = aux->siguiente;
+        }
+        promedio = s/n;
+        return promedio;
+    };
 };
 
 int main(void){
+    srand(time(NULL));
     LSE L;
+    int i,n;
 
-    L.insertaUltimo(17);
-    L.muestraPrimeroAUltimo();cout<<endl<<endl;
-    L.insertaUltimo(29);
-    L.muestraPrimeroAUltimo();cout<<endl<<endl;
-    L.insertaPrimero(25);
-    L.muestraPrimeroAUltimo();cout<<endl<<endl;
-    L.insertaPrimero(33);
-    L.muestraPrimeroAUltimo();cout<<endl<<endl;
-    L.insertaPrimero(55);
-    L.muestraPrimeroAUltimo();cout<<endl<<endl;
-    L.insertaPrimero(38);
-    L.muestraPrimeroAUltimo();cout<<endl<<endl;
-    L.insertaPrimero(12);
-    L.muestraPrimeroAUltimo();cout<<endl<<endl;
-    L.insertaUltimo(127);
-    L.muestraPrimeroAUltimo();cout<<endl<<endl;
-    L.insertaUltimo(94);
-    L.muestraPrimeroAUltimo();cout<<endl<<endl;
-    L.insertaPrimero(17);
-    L.muestraPrimeroAUltimo();cout<<endl<<endl;
-    L.insertaUltimo(57);
-    L.muestraPrimeroAUltimo();cout<<endl<<endl;
-    L.insertaPrimero(18);
-    L.muestraPrimeroAUltimo();cout<<endl<<endl;
-    L.insertaUltimo(70);
-    L.muestraPrimeroAUltimo();cout<<endl<<endl;
-    L.insertaUltimo(-7);
-    L.muestraPrimeroAUltimo();cout<<endl<<endl;
-    L.insertaUltimo(-9);
-    L.muestraPrimeroAUltimo();cout<<endl<<endl;
-    system("pause");
-    system("cls");
-
-    int d;
-    L.muestraPrimeroAUltimo();cout<<endl<<endl;
-    cout<<"Que dato buscas? ";cin>>d;
-
-    if(L.buscaDato(d))
-        cout<<"SI esta"<<endl<<endl;
-    else
-        cout<<"NO esta"<<endl<<endl;
-    system("pause");
-    system("cls");
+    n = (rand()%15) + 1;//Genera un numero aleatorio entre 1 y 15
+    for(i=0; i<n; i++)
+        L.insertaPrimero(rand()%100);//Inserta un valor aleatorio entre 0 y 100
 
     L.muestraPrimeroAUltimo();cout<<endl<<endl;
-    L.eliminaUltimo();
-    L.muestraPrimeroAUltimo();cout<<endl<<endl;
-    L.eliminaUltimo();
-    L.muestraPrimeroAUltimo();cout<<endl<<endl;
-    L.eliminaUltimo();
-    L.muestraPrimeroAUltimo();cout<<endl<<endl;
-    system("pause");
-    system("cls");
+    cout<<"Hay "<<L.cuentaNodos()<<" nodos."<<endl<<endl;
+    cout<<"La suma es "<<L.sumaNodos()<<endl<<endl;
+    cout<<"Promedio es "<<L.promediaNodos()<<endl<<endl;
 
     return 0;
 }
