@@ -228,43 +228,162 @@ public:
             }
         }
     };
+    int cuentaNodos(void){
+        int n=0;
+        return n;
+    };
+    float sumaNodos(void){
+        float s=0;
+        return s;
+    };
+    float promediaNodos(void){
+        int n=0;
+        float s=0,prom=0;
+        return prom;
+    };
+    float buscaMenor(void){
+        float menor=-1;
+        return menor;
+    };
+    float buscaMayor(void){
+        float mayor=-1;
+        return mayor;
+    };
+    void concatenaListas(LDE& A, LDE& B){
+    };
+    void concatenaListasInvertidas(LDE& A, LDE& B){
+    };
+    void concatenaListasOrdenadamente(LDE& A, LDE& B){
+    };
+    float datoEnNodoEnMitad(void){
+        return -1;
+    };
+    float datoEnNesimoNodo(int nesimo){
+        return -1;
+    };
 };
-
 int main(void){
     srand(time(NULL));
-    LDE L1, L2, L3;
-    int i,d;
+    LDE L,L2,L3,L4,L5;
+    int i,n1,n2,nesimo,d;
 
-    for(i=0; i<20; i++){
-        d = rand()%100;
-        cout<<"Se inserta "<<d<<endl;
-        L1.insertaPrimero(d);
-        L2.insertaUltimo(d);
-        L3.insertaDato(d);
-        cout<<"L1: ";
-        L1.muestraPrimeroAUltimo();
-        cout<<endl;
-        cout<<"L2: ";
-        L2.muestraPrimeroAUltimo();
-        cout<<endl;
-        cout<<"L3: ";
-        L3.muestraPrimeroAUltimo();
-        cout<<endl<<endl;
+    n1 = rand()%10;
+    nesimo = rand()%20;
+    cout<<"n1: "<<n1<<endl<<endl;
+    for(i=0; i<n1; i++){
+        L.insertaPrimero((rand()%100));
     }
-    system("pause");
-    system("cls");
 
-    cout<<"L1: ";
-    L1.muestraPrimeroAUltimo();
+    n2 = rand()%10;
+    cout<<"n2: "<<n2<<endl<<endl;
+    for(i=0; i<n2; i++){
+        L2.insertaPrimero((rand()%100));
+    }
+
+    cout<<"L"<<endl;
+    L.muestraPrimeroAUltimo();
     cout<<endl;
-    cout<<"L2: ";
+    L.muestraUltimoAPrimero();
+    cout<<endl<<endl;
+    cout<<"n1 = "<<L.cuentaNodos()<<endl
+        <<"suma = "<<L.sumaNodos()<<endl
+        <<"prom = "<<L.promediaNodos()<<endl
+        <<"menor = "<<L.buscaMenor()<<endl
+        <<"mayor = "<<L.buscaMayor()<<endl
+        <<"dato en mitad = "<<L.datoEnNodoEnMitad()<<endl
+        <<"dato en nodo #"<<nesimo<<" = "<<L.datoEnNesimoNodo(nesimo)<<endl<<endl;
+
+    cout<<"L2"<<endl;
     L2.muestraPrimeroAUltimo();
     cout<<endl;
-    cout<<"L3: ";
-    L3.muestraPrimeroAUltimo();
+    L2.muestraUltimoAPrimero();
     cout<<endl<<endl;
+    cout<<"n2 = "<<L2.cuentaNodos()<<endl
+        <<"suma = "<<L2.sumaNodos()<<endl
+        <<"prom = "<<L2.promediaNodos()<<endl
+        <<"menor = "<<L2.buscaMenor()<<endl
+        <<"mayor = "<<L2.buscaMayor()<<endl
+        <<"dato en mitad = "<<L2.datoEnNodoEnMitad()<<endl
+        <<"dato en nodo #"<<nesimo<<" = "<<L2.datoEnNesimoNodo(nesimo)<<endl<<endl;
+
+    L3.concatenaListas(L,L2);
+    cout<<"L"<<endl;
+    L.muestraPrimeroAUltimo();
+    cout<<endl;
+    L.muestraUltimoAPrimero();
+    cout<<endl<<endl;
+    cout<<"L2"<<endl;
+    L2.muestraPrimeroAUltimo();
+    cout<<endl;
+    L2.muestraUltimoAPrimero();
+    cout<<endl<<endl;
+    cout<<"L3"<<endl;
+    L3.muestraPrimeroAUltimo();
+    cout<<endl;
+    L3.muestraUltimoAPrimero();
+    cout<<endl<<endl;
+    cout<<"n3 = "<<L3.cuentaNodos()<<endl
+        <<"suma = "<<L3.sumaNodos()<<endl
+        <<"prom = "<<L3.promediaNodos()<<endl
+        <<"menor = "<<L3.buscaMenor()<<endl
+        <<"mayor = "<<L3.buscaMayor()<<endl
+        <<"dato en mitad = "<<L3.datoEnNodoEnMitad()<<endl
+        <<"dato en nodo #"<<nesimo<<" = "<<L3.datoEnNesimoNodo(nesimo)<<endl<<endl;
 
     system("pause");
     system("cls");
+
+    L4.concatenaListasInvertidas(L,L2);
+    cout<<"L"<<endl;
+    L.muestraPrimeroAUltimo();
+    cout<<endl;
+    L.muestraUltimoAPrimero();
+    cout<<endl<<endl;
+    cout<<"L2"<<endl;
+    L2.muestraPrimeroAUltimo();
+    cout<<endl;
+    L2.muestraUltimoAPrimero();
+    cout<<endl<<endl;
+    cout<<"L4"<<endl;
+    L4.muestraPrimeroAUltimo();
+    cout<<endl;
+    L4.muestraUltimoAPrimero();
+    cout<<endl<<endl;
+    cout<<"n4 = "<<L4.cuentaNodos()<<endl
+        <<"suma = "<<L4.sumaNodos()<<endl
+        <<"prom = "<<L4.promediaNodos()<<endl
+        <<"menor = "<<L4.buscaMenor()<<endl
+        <<"mayor = "<<L4.buscaMayor()<<endl
+        <<"dato en mitad = "<<L4.datoEnNodoEnMitad()<<endl
+        <<"dato en nodo #"<<nesimo<<" = "<<L4.datoEnNesimoNodo(nesimo)<<endl<<endl;
+    system("pause");
+    system("cls");
+
+    L5.concatenaListasOrdenadamente(L,L2);
+    cout<<"L"<<endl;
+    L.muestraPrimeroAUltimo();
+    cout<<endl;
+    L.muestraUltimoAPrimero();
+    cout<<endl<<endl;
+    cout<<"L2"<<endl;
+    L2.muestraPrimeroAUltimo();
+    cout<<endl;
+    L2.muestraUltimoAPrimero();
+    cout<<endl<<endl;
+    cout<<"L5"<<endl;
+    L5.muestraPrimeroAUltimo();
+    cout<<endl;
+    L5.muestraUltimoAPrimero();
+    cout<<endl<<endl;
+    cout<<"n5 = "<<L5.cuentaNodos()<<endl
+        <<"suma = "<<L5.sumaNodos()<<endl
+        <<"prom = "<<L5.promediaNodos()<<endl
+        <<"menor = "<<L5.buscaMenor()<<endl
+        <<"mayor = "<<L5.buscaMayor()<<endl
+        <<"dato en mitad = "<<L5.datoEnNodoEnMitad()<<endl
+        <<"dato en nodo #"<<nesimo<<" = "<<L5.datoEnNesimoNodo(nesimo)<<endl<<endl;
+    system("pause");
+    system("cls");
+
     return 0;
 }
