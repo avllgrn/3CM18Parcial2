@@ -3,18 +3,21 @@
 #include <time.h>
 using namespace std;
 
-class LSE{
+class LDE{
 private:
     class Nodo{
     public:
-        int dato;
+        Nodo* previo;
+        float dato;
         Nodo* siguiente;
         Nodo(void){
+            previo = NULL;
             dato = 0;
             siguiente = NULL;
             //cout<<"Nodo construido..."<<endl;
         };
-        Nodo(int d, Nodo* s){
+        Nodo(Nodo* p, float d, Nodo* s){
+            previo = p;
             dato = d;
             siguiente = s;
             //cout<<"Nodo construido..."<<endl;
@@ -25,332 +28,243 @@ private:
     };
     Nodo* primero;
     Nodo* ultimo;
-public:
-    LSE(void){
-        primero = NULL;
-        ultimo = NULL;
+    Nodo* busca(float d){
+        Nodo* aux1;
+        Nodo* aux2;
+        aux1=primero;
+        aux2=ultimo;
+        while(aux1!=aux2 && aux1->siguiente!=aux2 &&
+              d!=aux1->dato && d!=aux2->dato
+              ){
+            aux1=aux1->siguiente;
+            aux2=aux2->previo;
+        }
+        if(d==aux1->dato)
+            return aux1;
+        else if(d==aux2->dato)
+            return aux2;
+        else
+            return NULL;
     };
-    ~LSE(void){
+public:
+    LDE(void){
+        primero=NULL;
+        ultimo=NULL;
+    };
+    ~LDE(void){
         liberaLista();
     };
-    void insertaDato(int d){
-        if(estaVacia() || d <= primero->dato)
-            insertaPrimero(d);
-        else if(d >= ultimo->dato)
-            insertaUltimo(d);
-        else{
-            Nodo* aux1;
-            Nodo* aux2;
-            aux1 = primero;
-            aux2 = primero->siguiente;
-            while(d >= aux2->dato){
-                aux1 = aux1->siguiente;
-                aux2 = aux2->siguiente;
-            }
-            aux1->siguiente = new Nodo(d,aux2);
-        }
-    };
-    void insertaPrimero(int d){
+    void insertaPrimero(float d){
         if(estaVacia()){
-            primero = new Nodo(d,NULL);
+            primero = new Nodo(NULL,d,NULL);
             ultimo = primero;
         }
         else{
-            primero = new Nodo(d,primero);
+            primero->previo = new Nodo(NULL,d,primero);
+            primero = primero->previo;
         }
     };
-    void insertaUltimo(int d){
+    void insertaUltimo(float d){
         if(estaVacia()){
-            ultimo = new Nodo(d,NULL);
+            ultimo = new Nodo(NULL,d,NULL);
             primero = ultimo;
         }
         else{
-            ultimo->siguiente = new Nodo(d,NULL);
+            ultimo->siguiente = new Nodo(ultimo,d,NULL);
             ultimo = ultimo->siguiente;
         }
     };
-    bool eliminaDato(int d){
-        if(estaVacia())
-            return false;
-        else if(d == primero->dato){
-            eliminaPrimero();
-            return true;
-        }
-        else if(d == ultimo->dato){
-            eliminaUltimo();
-            return true;
-        }
+    void insertaDato(float d){
+        Nodo* aux1;
+        Nodo* aux2;
+
+        if(estaVacia() || d<=primero->dato)
+            insertaPrimero(d);
+        else if(d>=ultimo->dato)
+            insertaUltimo(d);
         else{
-            Nodo* aux1;
-            Nodo* aux2;
-            aux1 = primero;
-            aux2 = primero->siguiente;
-            while(aux2!=NULL && d!=aux2->dato){
-                aux1 = aux1->siguiente;
-                aux2 = aux2->siguiente;
+            aux1=primero;
+            aux2=ultimo;
+            while(aux1!=aux2 && aux1->siguiente!=aux2 &&
+                  d>aux1->dato && d<aux2->dato
+                  ){
+                aux1=aux1->siguiente;
+                aux2=aux2->previo;
             }
-            if(aux2==NULL)
-                return false;
+            if(d<=aux1->dato){
+                aux2 = aux1->previo;
+                aux2->siguiente = new Nodo(aux2,d,aux1);
+                aux1->previo = aux2->siguiente;
+            }
+            else if(d>=aux2->dato){
+                aux1 = aux2->siguiente;
+                aux2->siguiente = new Nodo(aux2,d,aux1);
+                aux1->previo = aux2->siguiente;
+            }
             else{
-                aux1->siguiente = aux2->siguiente;
-                delete aux2;
-                return true;
+                aux1->siguiente = new Nodo(aux1,d,aux2);
+                aux2->previo = aux1->siguiente;
+
             }
         }
     };
-    int eliminaPrimero(void){
-        Nodo* aux;
-        int d;
-
+    float eliminaPrimero(void){
+        Nodo*aux;
+        int d=-1;
         if(!estaVacia()){
             d = primero->dato;
-            if(primero == ultimo){
+            if(primero==ultimo){
                 delete primero;
-                primero = NULL;
-                ultimo = NULL;
+                primero=NULL;
+                ultimo=NULL;
             }
             else{
                 aux = primero;
                 primero = primero->siguiente;
                 delete aux;
+                primero->previo = NULL;
             }
         }
         return d;
     };
-    int eliminaUltimo(void){
-        Nodo* aux;
-        int d;
-
+    float eliminaUltimo(void){
+        Nodo*aux;
+        int d=-1;
         if(!estaVacia()){
             d = ultimo->dato;
-            if(primero == ultimo){
+            if(ultimo==primero){
                 delete ultimo;
-                ultimo = NULL;
-                primero = NULL;
+                ultimo=NULL;
+                primero=NULL;
             }
             else{
-                aux = primero;
-                while(aux->siguiente != ultimo){
-                    aux = aux->siguiente;
-                }
-                delete ultimo;
-                ultimo = aux;
+                aux = ultimo;
+                ultimo = ultimo->previo;
+                delete aux;
                 ultimo->siguiente = NULL;
             }
         }
         return d;
     };
-    bool buscaDato(int d){
-        Nodo* aux;
-
-        aux=primero;
-        while(aux != NULL){
-            if(aux->dato == d)
-            return true;
-            aux = aux->siguiente;
+    bool eliminaDato(float d){
+        Nodo* aux1;
+        Nodo* aux2;
+        aux2 = busca(d);
+        if(aux2==NULL)
+            return false;
+        else if(aux2==primero)
+            eliminaPrimero();
+        else if(aux2==ultimo)
+            eliminaUltimo();
+        else{
+            aux1 = aux2->previo;
+            aux1->siguiente = aux2->siguiente;
+            aux1=aux2->siguiente;
+            aux1->previo = aux2->previo;
+            delete aux2;
         }
-        return false;
+        return true;
+    };
+    bool buscaDato(float d){
+        return busca(d)!=NULL;
     };
     void muestraPrimeroAUltimo(void){
         Nodo* aux;
-
         aux=primero;
-        while(aux != NULL){
-            cout<<aux->dato;
-            if(aux->siguiente!=NULL)
-                cout<<" -> ";
-            aux = aux->siguiente;
+        while(aux!=NULL){
+            cout<<aux->dato<<" ";
+            aux=aux->siguiente;
         }
     };
     void muestraUltimoAPrimero(void){
-        Nodo*aux1;
-        Nodo*aux2;
-        if(!estaVacia()){
-            aux2 = ultimo;
-            cout<<aux2->dato;
-            while(aux2!=primero){
-                cout<<" <- ";
-                aux1=primero;
-                while(aux1->siguiente != aux2){
-                    aux1 = aux1->siguiente;
-                }
-                aux2 = aux1;
-                cout<<aux2->dato;
-            }
-        }
-    };
-    void generaListaOrdenada(LSE& L){
-        Nodo*aux;
-        L.liberaLista();//Asegurarse de que no tenga datos previos, posiblemente desordenados
-
-        aux = primero;
+        Nodo* aux;
+        aux=ultimo;
         while(aux!=NULL){
-            L.insertaDato(aux->dato);
-            aux = aux->siguiente;
+            cout<<aux->dato<<" ";
+            aux=aux->previo;
         }
     };
     bool estaVacia(void){
         return
-            primero == NULL
+            primero==NULL
             &&
-            ultimo == NULL
+            ultimo==NULL
         ;
     };
     void liberaLista(void){
-        while(!estaVacia()){
-            cout<<eliminaUltimo()<<endl;
+        if(!estaVacia()){
+            while(primero!=ultimo && primero->siguiente!=ultimo){
+                cout<<eliminaPrimero()<<", ";
+                cout<<eliminaUltimo()<<endl;
+            }
+            if(primero==ultimo){
+                cout<<eliminaUltimo()<<endl;
+            }
+            else{
+                cout<<eliminaPrimero()<<", ";
+                cout<<eliminaUltimo()<<endl;
+            }
+        }
+    };
+    void generaListaOrdenada(LDE& L){
+        Nodo* aux1;
+        Nodo* aux2;
+        L.liberaLista();
+        if(!estaVacia()){
+            aux1=primero;
+            aux2=ultimo;
+            while(aux1!=aux2 && aux1->siguiente!=aux2){
+                L.insertaDato(aux1->dato);
+                L.insertaDato(aux2->dato);
+                aux1=aux1->siguiente;
+                aux2=aux2->previo;
+            }
+            if(aux1==aux2){
+                L.insertaDato(aux1->dato);
+            }
+            else{
+                L.insertaDato(aux1->dato);
+                L.insertaDato(aux2->dato);
+            }
         }
     };
 };
 
 int main(void){
     srand(time(NULL));
-    LSE L1,L2,L3;
+    LDE L1, L2, L3;
     int i,d;
 
-    for(i=0; i<15; i++){
+    for(i=0; i<20; i++){
         d = rand()%100;
         cout<<"Se inserta "<<d<<endl;
-        L1.insertaPrimero(d);   //Se inserta siempre por el inicio
-        L2.insertaUltimo(d);    //Se inserta siempre por el final
-        L3.insertaDato(d);      //Se inserta ordenadamente
+        L1.insertaPrimero(d);
+        L2.insertaUltimo(d);
+        L3.insertaDato(d);
         cout<<"L1: ";
-        L1.muestraPrimeroAUltimo();cout<<endl;
+        L1.muestraPrimeroAUltimo();
+        cout<<endl;
         cout<<"L2: ";
-        L2.muestraPrimeroAUltimo();cout<<endl;
+        L2.muestraPrimeroAUltimo();
+        cout<<endl;
         cout<<"L3: ";
-        L3.muestraPrimeroAUltimo();cout<<endl<<endl;
+        L3.muestraPrimeroAUltimo();
+        cout<<endl<<endl;
     }
     system("pause");
     system("cls");
 
     cout<<"L1: ";
-    L1.muestraPrimeroAUltimo();cout<<endl;
-    cout<<"L2: ";
-    L2.muestraPrimeroAUltimo();cout<<endl;
-    cout<<"L3: ";
-    L3.muestraPrimeroAUltimo();cout<<endl<<endl;
-
-    cout<<"Se elimina el primero."<<endl;
-    cout<<L1.eliminaPrimero()<<endl;
-    cout<<L2.eliminaPrimero()<<endl;
-    cout<<L3.eliminaPrimero()<<endl<<endl;
-
-    cout<<"L1: ";
-    L1.muestraPrimeroAUltimo();cout<<endl;
-    cout<<"L2: ";
-    L2.muestraPrimeroAUltimo();cout<<endl;
-    cout<<"L3: ";
-    L3.muestraPrimeroAUltimo();cout<<endl<<endl;
-    system("pause");
-    system("cls");
-
-    cout<<"L1: ";
-    L1.muestraPrimeroAUltimo();cout<<endl;
-    cout<<"L2: ";
-    L2.muestraPrimeroAUltimo();cout<<endl;
-    cout<<"L3: ";
-    L3.muestraPrimeroAUltimo();cout<<endl<<endl;
-
-    cout<<"Se elimina el ultimo."<<endl;
-    cout<<L1.eliminaUltimo()<<endl;
-    cout<<L2.eliminaUltimo()<<endl;
-    cout<<L3.eliminaUltimo()<<endl<<endl;
-
-    cout<<"L1: ";
-    L1.muestraPrimeroAUltimo();cout<<endl;
-    cout<<"L2: ";
-    L2.muestraPrimeroAUltimo();cout<<endl;
-    cout<<"L3: ";
-    L3.muestraPrimeroAUltimo();cout<<endl<<endl;
-    system("pause");
-    system("cls");
-
-    cout<<"L1: ";
-    L1.muestraPrimeroAUltimo();cout<<endl;
-    cout<<"L2: ";
-    L2.muestraPrimeroAUltimo();cout<<endl;
-    cout<<"L3: ";
-    L3.muestraPrimeroAUltimo();cout<<endl<<endl;
-    cout<<"Ingresa un numero que NO se encuentre en las listas ";
-    cin>>d;
+    L1.muestraPrimeroAUltimo();
     cout<<endl;
-
-    if(L1.eliminaDato(d))
-        cout<<"FUE eliminado"<<endl;
-    else
-        cout<<"NO fue eliminado"<<endl;
-
-    if(L2.eliminaDato(d))
-        cout<<"FUE eliminado"<<endl;
-    else
-        cout<<"NO fue eliminado"<<endl;
-
-    if(L3.eliminaDato(d))
-        cout<<"FUE eliminado"<<endl;
-    else
-        cout<<"NO fue eliminado"<<endl;
-
-    cout<<endl;
-    cout<<"L1: ";
-    L1.muestraPrimeroAUltimo();cout<<endl;
     cout<<"L2: ";
-    L2.muestraPrimeroAUltimo();cout<<endl;
+    L2.muestraPrimeroAUltimo();
+    cout<<endl;
     cout<<"L3: ";
-    L3.muestraPrimeroAUltimo();cout<<endl<<endl;
+    L3.muestraPrimeroAUltimo();
+    cout<<endl<<endl;
+
     system("pause");
     system("cls");
-
-    cout<<"L1: ";
-    L1.muestraPrimeroAUltimo();cout<<endl;
-    cout<<"L2: ";
-    L2.muestraPrimeroAUltimo();cout<<endl;
-    cout<<"L3: ";
-    L3.muestraPrimeroAUltimo();cout<<endl<<endl;
-    cout<<"Ingresa un numero que SE ENCUENTRE en las listas (que no sea ni el primero ni el ultimo) ";
-    cin>>d;
-    cout<<endl;
-
-    if(L1.eliminaDato(d))
-        cout<<"FUE eliminado"<<endl;
-    else
-        cout<<"NO fue eliminado"<<endl;
-
-    if(L2.eliminaDato(d))
-        cout<<"FUE eliminado"<<endl;
-    else
-        cout<<"NO fue eliminado"<<endl;
-
-    if(L3.eliminaDato(d))
-        cout<<"FUE eliminado"<<endl;
-    else
-        cout<<"NO fue eliminado"<<endl;
-
-    cout<<endl;
-    cout<<"L1: ";
-    L1.muestraPrimeroAUltimo();cout<<endl;
-    cout<<"L2: ";
-    L2.muestraPrimeroAUltimo();cout<<endl;
-    cout<<"L3: ";
-    L3.muestraPrimeroAUltimo();cout<<endl<<endl;
-    system("pause");
-
-    L3.liberaLista();
-    system("cls");
-    cout<<"L1: ";
-    L1.muestraPrimeroAUltimo();cout<<endl;
-    cout<<"L3: ";
-    L3.muestraPrimeroAUltimo();cout<<endl<<endl;
-
-    L1.generaListaOrdenada(L3);
-    cout<<"Se genera L3 ordenadamente, con los datos desordenados de L1."<<endl<<endl;
-
-    cout<<"L3 de inicio a fin: ";
-    L3.muestraPrimeroAUltimo();cout<<endl;
-    cout<<"L3 de fin a inicio: ";
-    L3.muestraUltimoAPrimero();cout<<endl<<endl;
-    system("pause");
-    system("cls");
-
     return 0;
 }
